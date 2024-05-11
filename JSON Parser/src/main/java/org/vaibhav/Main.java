@@ -13,14 +13,14 @@ public class Main {
         while(true) {
             System.out.print("> ");
             String input = reader.readLine();
-            if(input.startsWith("ccwc")) {
-                new CommandLine(new wcCommand()).execute(input.split(" "));
+            if(input.startsWith("parse")) {
+                new CommandLine(new ParseCommand()).execute(input.split(" "));
             }
-            else if(input.startsWith("quit")) {
+            else if(input.equals("quit")) {
                 new CommandLine(new QuitCommand()).execute();
             }
             else{
-                System.out.println("Invalid command");
+                System.out.println("Invalid Command");
             }
         }
     }
