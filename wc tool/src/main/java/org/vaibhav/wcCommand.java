@@ -10,9 +10,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Arrays;
-
+import java.util.stream.Collectors;
 
 @Command(name = "ccwc",description = "this tool is used for word, line, character, and byte count")
 public class wcCommand implements Runnable{
@@ -87,7 +88,7 @@ public class wcCommand implements Runnable{
                     System.out.println(countBytes(file)+" "+countLines(file)+" "+countWords(file)+" "+file);
                 }
             }
-            catch (FileNotFoundException e) {
+            catch (NoSuchFileException e) {
                 System.out.println("File not found.......");
             }
             catch (IOException e) {
@@ -98,13 +99,8 @@ public class wcCommand implements Runnable{
 
     private int countBytes(String filePath)
             throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(filePath));
-        int count = 0;
-        String line;
-        while((line = reader.readLine()) != null) {
-            count += line.getBytes(StandardCharsets.UTF_8).length;
-        }
-        return count;
+        String input = Files.lines(Path.of(filePath)).collect(Collectors.joining());
+        return input.getBytes(StandardCharsets.UTF_8).length;
     }
 
     private int countLines(String filePath)
