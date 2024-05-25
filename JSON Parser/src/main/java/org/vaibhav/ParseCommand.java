@@ -30,25 +30,31 @@ public class ParseCommand implements Runnable {
         }
     }
 
-    private void parse(String filePath)
-            throws IOException {
+    private void parse(String filePath) throws IOException {
         String input = Files.lines(Path.of(filePath)).collect(Collectors.joining());
-        JSONLexer jsonLexer = new JSONLexer(CharStreams.fromString(input));
-        jsonLexer.removeErrorListeners();
-        CommonTokenStream tokens = new CommonTokenStream(jsonLexer);
-        JSONParser parser = new JSONParser(tokens);
-        CustomErrorListener errorListener = new CustomErrorListener();
-        parser.removeErrorListeners();
-        parser.addErrorListener(errorListener);
-        jsonLexer.addErrorListener(errorListener);
-        ParseTree tree = parser.json();
-        if(errorListener.hasError()) {
-            System.out.println("Invalid Json");
-        }
-        else{
-            System.out.println("Valid json");
-        }
-    }
+        CustomLexer customLexer = new CustomLexer(input);
+        CustomParser customParser = new CustomParser(customLexer);
+        customParser.parse();
+        System.out.println("valid json");
 
+        // Uncomment the below lines to use Lexer and parsers of ANTLR4
+        // To generate the antlr4 classes, run mvn package in terminal
+
+//        JSONLexer jsonLexer = new JSONLexer(CharStreams.fromString(input));
+//        jsonLexer.removeErrorListeners();
+//        CommonTokenStream tokens = new CommonTokenStream(jsonLexer);
+//        JSONParser parser = new JSONParser(tokens);
+//        CustomErrorListener errorListener = new CustomErrorListener();
+//        parser.removeErrorListeners();
+//        parser.addErrorListener(errorListener);
+//        jsonLexer.addErrorListener(errorListener);
+//        ParseTree tree = parser.json();
+//        if(errorListener.hasError()) {
+//            System.out.println("Invalid Json");
+//        }
+//        else{
+//            System.out.println("Valid json");
+//        }
+    }
 }
 

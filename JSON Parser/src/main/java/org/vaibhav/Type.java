@@ -1,0 +1,5 @@
+package org.vaibhav;
+
+public enum Type{
+    NUMBER,STRING,NULL,LBRACE,RBRACE,COLON,COMMA,EOF,LBRACKET,RBRACKET,TRUE,FALSE;
+}
