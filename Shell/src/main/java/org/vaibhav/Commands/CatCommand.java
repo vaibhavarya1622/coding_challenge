@@ -1,5 +1,7 @@
-package org.vaibhav;
+package org.vaibhav.Commands;
 
+import org.vaibhav.Util.Output;
+import org.vaibhav.Util.WorkingDir;
 import picocli.CommandLine.*;
 import picocli.CommandLine.Command;
 
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-@Command(name = "cccat", description = "unix cat command")
+@Command(name = "cat", description = "unix cat command")
 public class CatCommand implements Runnable {
     private static final Logger log = Logger.getLogger(CatCommand.class.getName());
     @Option(names = {"-n", "-N","-b","-B"})
@@ -22,7 +24,12 @@ public class CatCommand implements Runnable {
     @Override
     public void run() {
         int counter = 1;
+        Output output = Output.getInstance();
         if(files == null || files.length == 0 || files[0].equals("-")) {
+            if(!output.getOutput().isEmpty()) {
+                output.setOutput(output.getOutput());
+                return;
+            }
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             try {
                 String input;
@@ -36,20 +43,22 @@ public class CatCommand implements Runnable {
                 throw new RuntimeException(e);
             }
         }
+        StringBuilder sb = new StringBuilder();
         for(String file:files) {
-            try(Stream<String> stream = Files.lines(Path.of(file))) {
+            WorkingDir dir = WorkingDir.getInstance();
+            try(Stream<String> stream = Files.lines(Path.of(dir.getCurrentDir().toString(),file))) {
                 List<String> input = stream.toList();
                 for(String str: input) {
                     if(showLines){
-                        System.out.print(counter++ + " ");
+                        sb.append(counter++).append(" ");
                     }
-                    System.out.println(str);
+                    sb.append(str);
                 }
             }
             catch (IOException e) {
                 log.info("File not found....");
-                e.printStackTrace();
             }
         }
+        output.setOutput(sb.toString());
     }
 }
