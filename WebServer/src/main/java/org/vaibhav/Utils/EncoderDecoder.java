@@ -53,13 +53,13 @@ public class EncoderDecoder {
                 break;
             }
         }
-        CoderResult coderResult = decoder.decode(buffer,outBuffer,true);
+        decoder.decode(buffer,outBuffer,true);
+        CoderResult coderResult = decoder.flush(outBuffer);
         if(coderResult.isOverflow()) {
             outBuffer.flip();
             sb.append(outBuffer);
             outBuffer.clear();
         }
-        decoder.flush(outBuffer);
         outBuffer.flip();
         sb.append(outBuffer);
         return sb.toString();
