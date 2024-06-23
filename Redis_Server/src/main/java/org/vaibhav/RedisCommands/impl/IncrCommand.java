@@ -13,7 +13,7 @@ public class IncrCommand implements Command {
 
     @Override
     public Command validate() {
-        if(args.length>1) throw new RuntimeException("ERR wrong number of arguments for 'incr' command");
+        if(args.length != 1) throw new RuntimeException("ERR wrong number of arguments for 'incr' command");
         try{
             if(redisStore.EXIST(args[0]))
                 Integer.parseInt(redisStore.GET(args[0]));
